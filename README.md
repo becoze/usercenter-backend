@@ -1,6 +1,8 @@
 # User Management system 
 
-## by Liyuan Liang
+Back-end repositories: https://github.com/becoze/usercenter-backend 
+
+Front-end repositories: https://github.com/becoze/usercenter-frontend 
 
 # Tech Stack
 
