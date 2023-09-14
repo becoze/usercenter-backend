@@ -3,8 +3,10 @@ package com.shier.shierusercenterbackend.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.shier.shierusercenterbackend.model.domain.User;
+import com.shier.shierusercenterbackend.model.request.UserAddRequest;
 import com.shier.shierusercenterbackend.model.request.UserSearchRequest;
 import com.shier.shierusercenterbackend.model.request.UserUpdatePasswordRequest;
+import com.shier.shierusercenterbackend.model.request.UserUpdateRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,8 +42,8 @@ public interface UserService extends IService<User> {
     /**
      * 用户脱敏
      *
-     * @param originUser
-     * @return
+     * @param originUser User
+     * @return success（）
      */
     User getSafetyUser(User originUser);
 
@@ -68,6 +70,24 @@ public interface UserService extends IService<User> {
      * @param request
      */
     boolean updateUserPassword(UserUpdatePasswordRequest updatePasswordRequest, HttpServletRequest request);
+
+    /**
+     * 管理员修改用户 Admin change other user
+     *
+     * @param userUpdateRequest
+     * @param request
+     * @return
+     */
+    boolean updateUser(UserUpdateRequest userUpdateRequest, HttpServletRequest request);
+
+    /**
+     * Admin add new user
+     *
+     * @param userAddRequest
+     * @param request
+     * @return
+     */
+    long adduser(UserAddRequest userAddRequest, HttpServletRequest request);
 
     /**
      * 分页条件

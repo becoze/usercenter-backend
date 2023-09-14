@@ -2,14 +2,14 @@ spring:
   application:
     name: shier-user-center
   datasource:
-    url: jdbc:mysql://localhost:3306/user-center
+    url: jdbc:mysql://localhost:3306/twelvedb
     username: root
-    password: 123456
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-  profiles:
-    active: dev
+    password: AQ31km7q5#Hc
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
+#  profiles:
+#    active: dev
   # session登录态超时时间
   session:
     timeout: 86400
@@ -17,22 +17,24 @@ server:
   port: 8081
   servlet:
     context-path: /api
-knife4j:
-  enable: true
+#knife4j:
+#  enable: true
+#
 # 自动转换为驼峰
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       logic-delete-field: isDelete # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
       logic-delete-value: 1 # 逻辑已删除值(默认为 1)
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
-aliyun:
-  oss:
-    file:
-      endpoint: xxxx
-      keyid: xxxx
-      keysecret: xxxx
-      bucketname: xxxx
+
+#aliyun:
+#  oss:
+#    file:
+#      endpoint: xxxx
+#      keyid: xxxx
+#      keysecret: xxxx
+#      bucketname: xxxx

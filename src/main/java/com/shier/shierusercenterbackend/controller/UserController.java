@@ -9,8 +9,6 @@ import com.shier.shierusercenterbackend.model.domain.User;
 import com.shier.shierusercenterbackend.model.request.*;
 import com.shier.shierusercenterbackend.service.UserService;
 import com.shier.shierusercenterbackend.utils.ResultUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +17,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.shier.shierusercenterbackend.constant.UserConstant.ADMIN_ROLE;
@@ -31,8 +31,8 @@ import static com.shier.shierusercenterbackend.constant.UserConstant.USER_LOGIN_
  */
 @RestController
 @RequestMapping("/user")
-@Api(tags = "用户管理")
-@CrossOrigin(origins = "http://user.kongshier.top/", allowCredentials = "true")
+//@Api(tags = "用户管理")
+//@CrossOrigin(origins = "http://user.kongshier.top/", allowCredentials = "true")
 public class UserController {
     @Resource
     private UserService userService;
@@ -40,19 +40,20 @@ public class UserController {
     /**
      * 用户注册请求
      *
-     * @param userRegisterRequest
-     * @return
+     * @param userRegisterRequest request
+     * @return success()
      */
     @PostMapping("/register")
-    @ApiOperation(value = "用户注册")
+//    @ApiOperation(value = "用户注册")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         if (userRegisterRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Request parameters are empty");
         }
         String userAccount = userRegisterRequest.getUserAccount();
         String userPassword = userRegisterRequest.getUserPassword();
         String checkPassword = userRegisterRequest.getCheckPassword();
         String userCode = userRegisterRequest.getUserCode();
+
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userCode)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -63,20 +64,20 @@ public class UserController {
     /**
      * 用户登录请求
      *
-     * @param userLoginRequest
-     * @param request          请求对象
-     * @return
+     * @param userLoginRequest request
+     * @param request Request object
+     * @return success()
      */
     @PostMapping("/login")
-    @ApiOperation(value = "用户登录")
+//    @ApiOperation(value = "用户登录")
     public BaseResponse<User> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         if (userLoginRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Request parameters are empty");
         }
         String userAccount = userLoginRequest.getUserAccount();
         String userPassword = userLoginRequest.getUserPassword();
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Request parameters are empty");
         }
         User user = userService.userLogin(userAccount, userPassword, request);
         return ResultUtils.success(user);
@@ -85,14 +86,14 @@ public class UserController {
     /**
      * 用户注销
      *
-     * @param request
-     * @return
+     * @param request request
+     * @return success()
      */
     @PostMapping("/logout")
-    @ApiOperation(value = "退出登录")
+//    @ApiOperation(value = "退出登录")
     public BaseResponse<Integer> userLogout(HttpServletRequest request) {
         if (request == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Request parameters are empty");
         }
         int logoutResult = userService.userLogout(request);
         return ResultUtils.success(logoutResult);
@@ -101,11 +102,11 @@ public class UserController {
     /**
      * 当前登录用户请求
      *
-     * @param request
-     * @return
+     * @param request request
+     * @return success()
      */
     @GetMapping("/current")
-    @ApiOperation(value = "当前用户")
+//    @ApiOperation(value = "当前用户")
     public BaseResponse<User> getCurrentUser(HttpServletRequest request) {
         // 获取登录态
         User resultUser = userService.getLoginUser(request);
@@ -113,40 +114,35 @@ public class UserController {
     }
 
     /**
-     * 创建用户
+     * Create and add new user
      *
-     * @param userAddRequest
-     * @param request
-     * @return
+     * @param userAddRequest request
+     * @param request request
+     * @return success()
      */
     @PostMapping("/add")
-    @ApiOperation(value = "新增用户")
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无权限");
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "No permission");
         }
         if (userAddRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Request parameters are empty");
         }
-        User user = new User();
-        BeanUtils.copyProperties(userAddRequest, user);
-        boolean result = userService.save(user);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(user.getId());
+        long addUser = userService.adduser(userAddRequest, request);
+        return ResultUtils.success(addUser);
     }
 
     /**
-     * 查询用户
+     * Search user database
      *
-     * @param searchRequest
-     * @return
+     * @param searchRequest request
+     * @return success()
      */
     @GetMapping("/search")
-    @ApiOperation(value = "查询用户")
     public BaseResponse<List<User>> searchUsers(UserSearchRequest searchRequest, HttpServletRequest request) {
         // 管理员校验
         if (!isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无权限");
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "No permission");
         }
         String username = searchRequest.getUsername();
         String userAccount = searchRequest.getUserAccount();
@@ -204,16 +200,15 @@ public class UserController {
     }
 
     /**
-     * 删除用户
+     * User logical deletion
      *
-     * @param deleteRequest
-     * @return
+     * @param deleteRequest request
+     * @return success()
      */
     @PostMapping("/delete")
-    @ApiOperation(value = "删除用户")
     public BaseResponse<Boolean> deleteUser(@RequestBody UserDeleteRequest deleteRequest, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无权限");
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "No permission");
         }
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -223,41 +218,46 @@ public class UserController {
     }
 
     /**
-     * 更新用户
+     * Admin change other user
      *
-     * @param userUpdateRequest
-     * @param request
-     * @return
+     * @param userUpdateRequest request
+     * @param request request
+     * @return success()
      */
     @PostMapping("/update")
-    @ApiOperation(value = "更新用户")
+//    @ApiOperation(value = "更新用户")
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无权限");
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "No permission");
         }
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = new User();
-        BeanUtils.copyProperties(userUpdateRequest, user);
-        boolean result = userService.updateById(user);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(true);
+//        User user = new User();
+//        BeanUtils.copyProperties(userUpdateRequest, user);
+//        boolean result = userService.updateById(user);
+//        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+
+        boolean updateUser = userService.updateUser(userUpdateRequest, request);
+        if(updateUser){
+            return ResultUtils.success(true);
+        }else{
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
+        }
     }
 
     /**
-     * 用户自己更新个人信息
+     * User change their own information
      *
-     * @param userUpdateMyRequest
-     * @param request
-     * @return
+     * @param userUpdateMyRequest request
+     * @param request request
+     * @return success()
      */
     @PostMapping("/update/my")
-    @ApiOperation(value = "用户更新信息")
     public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
                                               HttpServletRequest request) {
         if (userUpdateMyRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Request is null");
         }
         User loginUser = userService.getLoginUser(request);
         User user = new User();
@@ -269,19 +269,18 @@ public class UserController {
     }
 
     /**
-     * 修改密码
+     * User modify their own password
      *
-     * @param updatePasswordRequest
-     * @param request
-     * @return
+     * @param updatePasswordRequest request
+     * @param request request
+     * @return success() / error()
      */
     @PostMapping("/update/password")
-    @ApiOperation(value = "用户密码更改")
     public BaseResponse<Boolean> updateUserPassword(@RequestBody UserUpdatePasswordRequest updatePasswordRequest,
                                                     HttpServletRequest request) {
-        if (!isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无权限");
-        }
+//        if (!isAdmin(request)) {
+//            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "No permission");
+//        }
         boolean updateUserPassword = userService.updateUserPassword(updatePasswordRequest, request);
         if (updateUserPassword) {
             return ResultUtils.success(true);
@@ -291,10 +290,10 @@ public class UserController {
     }
 
     /**
-     * 是否为管理员
+     * Is admin
      *
-     * @param request
-     * @return
+     * @param request request
+     * @return true / false
      */
     private boolean isAdmin(HttpServletRequest request) {
         // 管理员校验

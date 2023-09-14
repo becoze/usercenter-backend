@@ -10,30 +10,30 @@ public enum ErrorCode {
     /**
      * 40000 参数错误
      */
-    PARAMS_ERROR(40000, "请求参数错误", ""),
+    PARAMS_ERROR(40000, "Request parameter error", ""),
     /**
      * 40001 数据为空
      */
-    NULL_ERROR(40001, "请求数据为空", ""),
+    NULL_ERROR(40001, "Request data is empty", ""),
     /**
      * 40100 未登录
      */
-    NOT_LOGIN_ERROR(40100, "未登录", ""),
+    NOT_LOGIN_ERROR(40100, "Not logged in", ""),
     /**
      * 40101 无权限
      */
-    NO_AUTH_ERROR(40101, "无权限", ""),
+    NO_AUTH_ERROR(40101, "No permission", ""),
     /**
      * 50000 内部系统错误
      */
-    SYSTEM_ERROR(50000, "系统内部异常", ""),
+    SYSTEM_ERROR(50000, "System error", ""),
 
-    OPERATION_ERROR(50001, "操作失败", "操作失败"),
+    OPERATION_ERROR(50001, "Operation failed", "Operation failed"),
 
     /**
      * 密码无效
      */
-    INVALID_PASSWORD_ERROR(40102, "无效密码", ""),
+    INVALID_PASSWORD_ERROR(40102, "Invalid password", ""),
     /**
      * 成功
      */

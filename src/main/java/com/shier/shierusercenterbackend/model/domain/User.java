@@ -55,7 +55,7 @@ public class User implements Serializable {
     private String email;
 
     /**
-     * 状态  0-正常 1-注销 2-封号
+     * 状态  0-normal; 1-ban
      */
     private Integer userStatus;
 
@@ -76,7 +76,7 @@ public class User implements Serializable {
     private Integer isDelete;
 
     /**
-     * user-普通用户 admin-管理员 ban-封号
+     * "user"-normal user; "admin"-admin;
      */
     private String userRole;
 

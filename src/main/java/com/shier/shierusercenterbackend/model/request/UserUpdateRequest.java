@@ -50,7 +50,7 @@ public class UserUpdateRequest implements Serializable {
     private String email;
 
     /**
-     * 状态  0-正常 1-注销 2-封号
+     * 状态  0-normal; 1-banned
      */
     private Integer userStatus;
 
@@ -61,13 +61,13 @@ public class UserUpdateRequest implements Serializable {
     private Date updateTime;
 
     /**
-     * 是否删除  逻辑删除
+     * is delete (logical delete)
      */
     @TableLogic
     private Integer isDelete;
 
     /**
-     * user-普通用户 admin-管理员 ban-封号
+     * user-normal user; admin-administrator
      */
     private String userRole;
 

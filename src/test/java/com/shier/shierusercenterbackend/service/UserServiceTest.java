@@ -21,25 +21,37 @@ public class UserServiceTest {
     @Test
     void testInsertUser() {
         User user = new User();
+//        user.setId(1L);
         user.setUsername("Shier");
-        user.setUserAccount("猫十二懿");
-        user.setAvatarUrl("https://profile.csdnimg.cn/2/B/1/1_qq_56098191");
-        user.setGender("男");
-        user.setUserPassword("12345678");
-        user.setPhone("888888888");
-        user.setEmail("66666666@qq.com");
+        user.setUserAccount("123");
+        user.setAvatarUrl("");
+        user.setGender("Male");
+        user.setUserPassword("123456789");
+        user.setPhone("0122");
+        user.setEmail("abc@sample.com");
         user.setUserCode("001");
+
         boolean result = userService.save(user);
-        System.out.println("新增用户ID：" + user.getId());
+        System.out.println("New User ID:" + user.getId());
         // 断言，判断一下是否符合预期结果，是否保存成功
         Assertions.assertTrue(result);
+    }
+
+    @Test
+    void userRegister() {
+        String userAccount = "xiaoshier";
+        String userPassword = "123456789";
+        String checkPassword = "123456789";
+        String userCode = "002";
+        long result = userService.userRegister(userAccount, userPassword, checkPassword, userCode);
+        Assertions.assertEquals(2, result);
     }
 
     /**
      * 测试出错的情况
      */
     @Test
-    void userRegister() {
+    void userRegisterLag() {
         // 测试非空
         String userAccount = "xiaoshier";
         String userPassword = "";

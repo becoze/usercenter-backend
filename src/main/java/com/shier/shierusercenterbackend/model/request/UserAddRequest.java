@@ -11,33 +11,26 @@ import java.io.Serializable;
 @Data
 public class UserAddRequest implements Serializable {
 
-    /**
-     * 用户昵称
-     */
     private String username;
 
-    /**
-     * 账号
-     */
     private String userAccount;
 
-    /**
-     * 账号
-     */
     private String userPassword;
 
-    /**
-     * 用户头像
-     */
     private String avatarUrl;
 
-    /**
-     * 用户编号
-     */
     private String userCode;
 
+    private String phone;
+
+    private String userStatus;
+
+    private String email;
+
+    private String gender;
+
     /**
-     * 用户角色: user, admin
+     * Role: user, admin
      */
     private String userRole;
 

@@ -30,6 +30,6 @@ public interface UserConstant {
     /**
      * 盐值,将密码进行混淆
      */
-    String SALT = "shier";
+    String SALT = "becoze"; // shier
 
 }
